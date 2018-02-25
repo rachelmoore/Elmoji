@@ -5,6 +5,7 @@ import Model
 import Html
 import Html.Events
 import Html.Attributes
+import EmojiConverter
 
 
 view : Model.Model -> Html.Html Update.Msg
@@ -41,9 +42,13 @@ view model =
             [ Html.Attributes.class "container" 
             , Html.Attributes.style [("backgroundColor", "pink")] 
             ]
-            [ Html.div
-                []
-                [Html.text model.currentText]
+            [ Html.p
+                [Html.Attributes.class "center output-text emoji-size"]
+                [Html.text (translateText model)]
             ]
             ]
         ]
+
+
+translateText model =
+    EmojiConverter.textToEmoji "😅" model.currentText
