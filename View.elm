@@ -2,53 +2,62 @@ module View exposing (..)
 
 import Update
 import Model
-import Html
-import Html.Events
-import Html.Attributes
+import Html exposing (..)
+import Html.Events exposing (..)
+import Html.Attributes exposing (..)
 import EmojiConverter
 
 
-view : Model.Model -> Html.Html Update.Msg
+view : Model.Model -> Html Update.Msg
 view model =
-    Html.div
+    div
         []
-        [ Html.node "link"
-            [ Html.Attributes.rel "stylesheet"
-            , Html.Attributes.href "stylesheets/main.css"
-            ]
+        [ node "link" [ rel "stylesheet", href "stylesheets/main.css" ] []
+        , nav
             []
-        , Html.nav
-            []
-            [ Html.div
-                [ Html.Attributes.class "nav-wrapper light-blue lighten-2" ]
-                [ Html.div
-                    [ Html.Attributes.class "brand-logo center" ]
-                    [ Html.text "Elmoji Translator" ]
+            [ div
+                [ class "nav-wrapper light-blue lighten-2" ]
+                [ div [ class "brand-logo center" ] [ text "Elmoji Translator" ]
                 ]
             ]
-        , Html.section
-            [ Html.Attributes.class "container" ]
-            [ Html.div
-                [ Html.Attributes.class "input-field" ]
-                [ Html.input
-                    [ Html.Attributes.type_ "text"
-                    , Html.Attributes.class "center"
-                    , Html.Attributes.placeholder "Let's Translate!"
-                    , Html.Events.onInput Update.SetCurrentText
-                    ]
-                    []
-                ]
-        , Html.section 
-            [ Html.Attributes.class "container" 
-            , Html.Attributes.style [("backgroundColor", "pink")] 
+        , section
+            [ class "container"
             ]
-            [ Html.p
-                [Html.Attributes.class "center output-text emoji-size"]
-                [Html.text (translateText model)]
-            ]
+            [ viewInput, 
+              viewToggle,
+              viewOtherThing model
             ]
         ]
 
+viewToggle = 
+--    div [class "switch center"] [label [][text "Translate Text", input [type_ "checkbox"] [] , span [class "lever"] [], text "Translate Emoji"]]
+    let
+        labelNode =
+            label []
+                [ text "Translate Text"
+                , input [type_ "checkbox", Html.Events.onClick Update.ToggleDirection ] []
+                , span [class "lever"] []
+                , text "Translate Emoji"
+                ]
+    in
+    div [class "switch center"] [labelNode]
+
+
+viewInput = 
+    div
+        [ class "input-field"
+        ]
+        [ input [ type_ "text", class "center", placeholder "Let's Translate!", onInput Update.SetCurrentText ] []
+        ]
+
+viewOtherThing model = 
+    section 
+        [ class "container" 
+        , style [("backgroundColor", "pink")] 
+        ]
+        [ p [class "center output-text emoji-size"] [text (translateText model)]
+        , p [] [ text "HELLO, HOW ARE YOU?" ]
+        ]
 
 translateText model =
-    EmojiConverter.textToEmoji "😅" model.currentText
+    EmojiConverter.textToEmoji model.defaultKey model.currentText
