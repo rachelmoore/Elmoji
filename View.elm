@@ -40,7 +40,7 @@ viewToggle =
                 , text "Translate Emoji"
                 ]
     in
-    div [class "switch center"] [labelNode]
+    div [class "switch center"] [labelNod]
 
 
 viewInput = 
